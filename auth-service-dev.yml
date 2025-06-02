@@ -28,7 +28,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/cinemazone
     username: admin
-    password: cmwJX01ECDDJkwxNvIPDLfUf9hvvZhgo
+    password: admin123
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

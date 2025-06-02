@@ -29,7 +29,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/cinemazone
     username: admin
     password: cmwJX01ECDDJkwxNvIPDLfUf9hvvZhgo
-
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update

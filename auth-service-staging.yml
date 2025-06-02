@@ -15,7 +15,7 @@ spring:
     name: auth-service
   data:
   datasource:
-    url: postgresql://admin:cmwJX01ECDDJkwxNvIPDLfUf9hvvZhgo@dpg-ctrmij3tq21c738uev6g-a.singapore-postgres.render.com/cinemazone
+    url: jdbc:postgresql://localhost:5432/cinemazone
     username: admin
     password: cmwJX01ECDDJkwxNvIPDLfUf9hvvZhgo
     driver-class-name: org.postgresql.Driver

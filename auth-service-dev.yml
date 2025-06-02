@@ -28,7 +28,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/cinemazone
     username: admin
-    password: admin123
+    password: cmwJX01ECDDJkwxNvIPDLfUf9hvvZhgo
 
   jpa:
     hibernate:

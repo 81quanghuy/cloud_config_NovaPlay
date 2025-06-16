@@ -26,7 +26,7 @@ spring:
             client-id: 917355857043361
             client-secret: 1322284ce9097c89e9597e807f5fbb54
   datasource:
-    url: jdbc:postgresql://localhost:5432/cinemazone
+    url: jdbc:postgresql://localhost:5432/auth-service
     username: admin
     password: admin123
     driver-class-name: org.postgresql.Driver

@@ -6,7 +6,7 @@ eureka:
       defaultZone: http://discovery-server:8761/eureka/
 
 server:
-  port: 8800
+  port: 8700
 
 spring:
   application:

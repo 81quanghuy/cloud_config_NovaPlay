@@ -11,6 +11,8 @@ server:
   port: 8700
 
 spring:
+  kafka:
+    bootstrap-servers: localhost:9092
   application:
     name: user-service
   datasource:
@@ -23,3 +25,13 @@ spring:
       ddl-auto: update
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+# Mở các endpoint của Actuator, đặc biệt là bus-refresh
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Mở tất cả endpoint, trong thực tế nên chọn lọc
+
+app:
+  message: "Cấu hình đã được TỰ ĐỘNG cập nhật! 🎉"

@@ -1,14 +1,21 @@
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    register-with-eureka: false
-    fetch-registry: false
-    serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+# Cấu hình cho môi trường QA của Discovery Server
 server:
   port: 8761
 
+eureka:
+  instance:
+    # Tên định danh của instance này trong mạng Docker
+    hostname: discovery-server
+  client:
+    # Một discovery server không cần tự đăng ký với chính nó
+    register-with-eureka: false
+    # Nó cũng không cần lấy thông tin từ chính nó
+    fetch-registry: false
+    serviceUrl:
+      # Đây là URL mà các client khác sẽ dùng để kết nối đến Eureka
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+# Các cấu hình về Resilience4j và Management giữ nguyên vì đã hợp lý
 resilience4j:
   circuitbreaker:
     instances:
@@ -34,10 +41,3 @@ management:
   endpoint:
     health:
       show-details: always
-logging:
-  level:
-    org:
-    springframework:
-      security: DEBUG
-  pattern:
-    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'

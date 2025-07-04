@@ -1,0 +1,47 @@
+# Cấu hình cho môi trường QA của API Gateway
+server:
+  port: 9000
+
+# Cấu hình tiền tố chung cho các API
+api:
+  prefix: api
+  version: v1
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          # Bắt buộc phải là true để Gateway có thể tự động tìm và tạo route từ Eureka
+          enabled: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          "[/**]":
+            allow-credentials: true
+            allowed-origins:
+              - "http://localhost:3000" # Cho phép frontend dev truy cập
+            allowed-headers: "*"
+            allowed-methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+
+eureka:
+  client:
+    # Gateway nên đăng ký với Eureka để có thể được theo dõi
+    register-with-eureka: true
+    # BẮT BUỘC: Gateway phải lấy registry để biết các service khác ở đâu
+    fetch-registry: true
+    # service-url đã được cung cấp qua biến môi trường trong docker-compose.yml
+
+# Các cấu hình khác giữ nguyên
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+# ... các cấu hình khác

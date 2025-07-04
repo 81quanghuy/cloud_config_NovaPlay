@@ -1,0 +1,38 @@
+# Cấu hình cho môi trường QA của User Service
+server:
+  port: 8700
+
+spring:
+  # Các thông tin kết nối này sẽ được cung cấp qua biến môi trường trong docker-compose.yml
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:29092}
+  datasource:
+    # Sử dụng biến môi trường để kết nối DB, có giá trị mặc định dự phòng
+    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:user-service}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+# Tên ứng dụng để đăng ký với Eureka
+eureka:
+  instance:
+    hostname: user-service
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    # service-url đã được cung cấp qua biến môi trường trong docker-compose.yml
+
+# Các cấu hình khác giữ nguyên
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+app:
+  message: "Đây là cấu hình cho User-Service môi trường QA! 🎉"

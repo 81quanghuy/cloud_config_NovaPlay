@@ -34,4 +34,4 @@ management:
         include: "*" # Mở tất cả endpoint, trong thực tế nên chọn lọc
 
 app:
-  message: "Cấu hình đã được TỰ ĐỘNG cập nhật! 🎉"
+  message: "QUANGHUYVFF!!!"

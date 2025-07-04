@@ -34,4 +34,4 @@ management:
         include: "*" # Mở tất cả endpoint, trong thực tế nên chọn lọc
 
 app:
-  message: "Ngo Diep Quang Huy"
+  message: "Ngo Diep Quangewewrưe Huy"

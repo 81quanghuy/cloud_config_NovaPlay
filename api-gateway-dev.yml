@@ -15,14 +15,6 @@ spring:
       discovery:
         locator:
           enabled: true  # Kích hoạt tính năng định tuyến từ Eureka
-      # Định nghĩa các route nếu cần
-      # routes:
-      #   - id: websocket_route
-      #     uri: lb:ws://conversation-service
-      #     predicates:
-      #       - Path=/ws/**
-      #     filters:
-      #       - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
 
       # Cấu hình các bộ lọc mặc định áp dụng cho tất cả các route
       default-filters:
@@ -45,8 +37,6 @@ spring:
               - DELETE
 
       # Kích hoạt tính năng phát hiện dịch vụ để Gateway có thể tự động tạo các route từ các microservices
-
-
 
 #springdoc:
 #  swagger-ui:
@@ -71,34 +61,15 @@ spring:
 #        url: /v3/api-docs/survey-service
 #      - name: report-service
 #        url: /v3/api-docs/report-service
-
-resilience4j:
-  circuitbreaker:
-    instances:
-      apiGateway:
-        register-health-indicator: true
-        event-consumer-buffer-size: 10
-        automatic-transition-from-open-to-half-open-enabled: true
-        failure-rate-threshold: 50
-        minimum-number-of-calls: 5
-        permitted-number-of-calls-in-half-open-state: 3
-        sliding-window-size: 10
-        wait-duration-in-open-state: 5s
-        sliding-window-type: COUNT_BASED
-
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-  health:
-    circuitbreakers:
-      enabled: true
   endpoint:
-    health:
-      show-details: always
-#management:
-#  tracing:
-#    sampling:
-#      probability: 1.0
+    gateway:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
 

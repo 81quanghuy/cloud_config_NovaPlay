@@ -31,7 +31,21 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*" # Mở tất cả endpoint, trong thực tế nên chọn lọc
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    shutdown:
+      access: unrestricted
+    health:
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
 
 app:
   message: "Cấu hình đã được TỰ ĐỘNG cập nhật! 🎉"

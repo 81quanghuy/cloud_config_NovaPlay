@@ -1,6 +1,6 @@
 # Cấu hình cho môi trường QA của API Gateway
 server:
-  port: 9000
+  port: 8072
 
 # Cấu hình tiền tố chung cho các API
 api:

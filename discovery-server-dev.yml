@@ -46,5 +46,9 @@ management:
       application: ${spring.application.name}
 
 logging:
+  level:
+    vn:
+      iotstar:
+        discoveryserver: DEBUG
   pattern:
     level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"

@@ -55,9 +55,6 @@ management:
     tags:
       application: ${spring.application.name}
 
-app:
-  message: "Ngo Diep Quang Huy"
-
 resilience4j.circuitbreaker:
   configs:
     default:

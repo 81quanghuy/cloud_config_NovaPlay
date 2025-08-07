@@ -11,3 +11,6 @@ server:
 spring:
   application:
     name: movie-service
+
+app:
+  message: "Ngo Diep Quang Huy"

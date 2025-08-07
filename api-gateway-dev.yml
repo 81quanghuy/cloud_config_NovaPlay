@@ -26,11 +26,6 @@ spring:
           issuer-uri: http://localhost:7080/realms/novaplay
           # jwk-set-uri: http://localhost:8080/realms/phim-online-realm/protocol/openid-connect/certs
 
-# Thông tin client để lấy token (dùng cho việc test)
-keycloak:
-  client-id: novaplay-gateway
-  client-secret: bytQhLf0GZ5ZorJjbo8lEx4M0rdAlQdX
-  token-uri: http://localhost:7080/realms/novaplay/protocol/openid-connect/token
   cloud:
     gateway:
       discovery:

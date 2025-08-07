@@ -87,6 +87,8 @@ resilience4j.ratelimiter:
 
 logging:
   level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     vn:
       iotstar:
         userservice: DEBUG

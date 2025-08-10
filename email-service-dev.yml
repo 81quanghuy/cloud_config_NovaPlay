@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: email-service
+  data:
+    mongodb:
+      uri: mongodb+srv://admin:admin123@restora.xde1bim.mongodb.net/email-service?retryWrites=true&w=majority
+  cloud:
+    function:
+      definition: emailSendRequestConsumer
+    stream:
+      bindings:
+        emailSendRequestConsumer-in-0:
+          destination: ops.email.send.request.v1
+          group: email-service
+      kafka:
+        binder:
+          brokers: ${KAFKA_BROKERS:localhost:9092}
+        bindings:
+          emailSendRequestConsumer-in-0:
+            consumer:
+              enableDlq: true
+              dlqName: ops.email.send.request.DLQ.v1
+              ackMode: RECORD
+              maxAttempts: 5
+              backOffInitialInterval: 2000
+              backOffMultiplier: 2.0
+              backOffMaxInterval: 30000
+server:
+  port: 8702

@@ -5,19 +5,32 @@ eureka:
     service-url:
       defaultZone: http://discovery-server:8761/eureka/
 
-server:
-  port: 8900
-
 spring:
   application:
-    name: notification_service
-  datasource:
-    url: jdbc:postgresql://postgres:5432/notification_service
-    username: admin
-    password: admin123
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    name: notification-service
+  data:
+    mongodb:
+      uri: mongodb+srv://admin:admin123@restora.xde1bim.mongodb.net/email-service?retryWrites=true&w=majority
+  cloud:
+    function:
+      definition: notificationPushRequestConsumer
+    stream:
+      bindings:
+        notificationPushRequestConsumer-in-0:
+          destination: ops.notification.push.request.v1
+          group: notification-service
+      kafka:
+        binder:
+          brokers: ${KAFKA_BROKERS:localhost:9092}
+        bindings:
+          notificationPushRequestConsumer-in-0:
+            consumer:
+              enableDlq: true
+              dlqName: ops.notification.push.request.DLQ.v1
+              ackMode: RECORD
+              maxAttempts: 4
+              backOffInitialInterval: 1000
+              backOffMultiplier: 2.0
+              backOffMaxInterval: 20000
+server:
+  port: 8900

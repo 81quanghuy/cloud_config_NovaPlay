@@ -30,6 +30,13 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
+    stream:
+      bindings:
+        placeholder-in-0:
+          destination: placeholder.ignore
+      kafka:
+        binder:
+          brokers: ${KAFKA_BROKERS:localhost:9092}
 
 # Mở các endpoint của Actuator, đặc biệt là bus-refresh
 management:

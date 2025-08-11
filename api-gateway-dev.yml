@@ -28,34 +28,6 @@ spring:
 
   cloud:
     gateway:
-      routes:
-      # Khai báo CORS cho TẤT CẢ routes
-      globalcors:
-        add-to-simple-url-handler-mapping: true
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins:
-              - "http://localhost:5173"
-              - "http://127.0.0.1:5173"
-              - "http://192.168.1.10:5173"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-            allowedHeaders:
-              - "Authorization"
-              - "Content-Type"
-              - "Accept"
-              - "Origin"
-              - "X-Requested-With"
-            exposedHeaders:
-              - "Authorization"
-            allowCredentials: true         # nếu FE dùng cookie/withCredentials
-            maxAge: 3600
-
-      default-filters:
-        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       discovery:
         locator:
           enabled: true  # Kích hoạt tính năng định tuyến từ Eureka

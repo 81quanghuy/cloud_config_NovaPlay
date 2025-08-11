@@ -28,6 +28,11 @@ spring:
 
   cloud:
     gateway:
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**
       # Khai báo CORS cho TẤT CẢ routes
       globalcors:
         add-to-simple-url-handler-mapping: true
@@ -39,9 +44,7 @@ spring:
               - GET
               - POST
               - PUT
-              - PATCH
               - DELETE
-              - OPTIONS
             allowedHeaders:
               - "Authorization"
               - "Content-Type"

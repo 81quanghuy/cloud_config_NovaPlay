@@ -98,3 +98,26 @@ logging:
         userservice: DEBUG
   pattern:
     level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui
+    operationsSorter: method
+    tagsSorter: alpha
+    displayOperationId: true
+    filter: true
+    # OAuth2 cho nút "Authorize" (dùng PKCE, không cần client secret)
+    oauth:
+      client-id: ${openapi.oauth2.client-id}
+      use-pkce-with-authorization-code-grant: true
+
+openapi:
+  server-url:
+    local: http://localhost:8700
+    dev: https://dev.api.novaplay.vn/user-service
+    gateway: http://localhost:8088/api/v1/users
+  oauth2:
+    realm-url: http://localhost:8080/realms/novaplay
+    client-id: novaplay-keycloak

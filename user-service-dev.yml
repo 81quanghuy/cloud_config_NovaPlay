@@ -47,7 +47,7 @@ spring:
         # Với hàm là 'keycloakEventConsumer', đây là binding cho đầu vào (in)
         keycloakEventConsumer-in-0:
           # Đích đến là topic 'keycloak.events' trên Kafka
-          destination: keycloak.events
+          destination: keycloak-events
           # Consumer group
           group: user-profile-group
         placeholder-in-0:

@@ -17,7 +17,7 @@ spring:
         jwt:
           issuer-uri: http://localhost:7080/realms/novaplay
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:9094
   application:
     name: user-service
   datasource:
@@ -54,7 +54,7 @@ spring:
           destination: placeholder.ignore
       kafka:
         binder:
-          brokers: ${KAFKA_BROKERS:localhost:9092}
+          brokers: ${KAFKA_BROKERS:localhost:9094}
 
 # Mở các endpoint của Actuator, đặc biệt là bus-refresh
 management:

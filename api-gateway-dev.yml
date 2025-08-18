@@ -1,40 +1,129 @@
+# ===================================================================
+# SERVER AND EUREKA CONFIGURATION
+# ===================================================================
+server:
+  port: 8072
+
 eureka:
   instance:
     preferIpAddress: true
   client:
-    register-with-eureka: true
+    register-with-eureka: false
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka/
-server:
-  port: 8072
+
+# ===================================================================
+# SPRING BOOT APPLICATION CONFIGURATION
+# ===================================================================
 spring:
   application:
     name: api-gateway
+
+  # ===================================================================
+  # REDIS CONFIGURATION (For Rate Limiter)
+  # ===================================================================
   data:
     redis:
       connect-timeout: 2s
       host: localhost
       port: 6379
       timeout: 1s
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          # Đây là URI mà Spring Security sẽ dùng để lấy thông tin cấu hình
-          # của OpenID Connect provider, bao gồm cả jwk-set-uri
-          issuer-uri: http://localhost:7080/realms/novaplay
-          # jwk-set-uri: http://localhost:8080/realms/phim-online-realm/protocol/openid-connect/certs
 
+  # ===================================================================
+  # SPRING CLOUD GATEWAY CONFIGURATION
+  # ===================================================================
   cloud:
     gateway:
+      # Enables routing based on service IDs discovered from Eureka.
       discovery:
         locator:
-          enabled: true  # Kích hoạt tính năng định tuyến từ Eureka
+          enabled: true
           lowerCaseServiceId: true
-      httpclient:
-        connect-timeout: 1000  # Thời gian kết nối tối đa
-        response-timeout: 10s  # Thời gian phản hồi tối đa
+
+      # Standardized global CORS configuration for the gateway.
+      globalcors:
+        cors-configurations:
+          '[/**]': # Apply to all paths
+            allowed-origins:
+              - "http://localhost:5173"
+              - "http://127.0.0.1:5173"
+            allowed-methods:
+              - "GET"
+              - "POST"
+              - "PUT"
+              - "DELETE"
+              - "PATCH"
+              - "OPTIONS"
+            allowed-headers: "*"
+            allow-credentials: true
+
+      # ===================================================================
+      # ROUTE DEFINITIONS
+      # ===================================================================
+      routes:
+        # Route for the Authentication Service. Publicly accessible.
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/auth/**
+          filters:
+            # Adds a response time header for monitoring.
+            - AddResponseHeader=X-Response-Time, #{T(java.time.LocalDateTime).now().toString()}
+
+        # Route for the User Service. Protected by multiple filters.
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - AuthenticationFilter
+            # Applies Redis-based rate limiting. Uses the 'userEmailOrIpKeyResolver' bean.
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@userEmailOrIpKeyResolver}"
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+            # Applies a retry mechanism for transient errors.
+            - name: Retry
+              args:
+                # Number of retry attempts.
+                retries: 3
+                # HTTP Statuses that should trigger a retry.
+                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT
+                methods: GET
+                # Configuration for the backoff strategy between retries.
+                backoff:
+                  firstBackoff: 100ms
+                  maxBackoff: 1s
+                  factor: 2
+                  basedOnPreviousValue: true
+            # Applies a Circuit Breaker pattern.
+            - name: CircuitBreaker
+              args:
+                name: userServiceCircuitBreaker
+                fallbackuri: forward:/fallback/message
+
+        # Route for the Movie Service. Protected by multiple filters.
+        - id: movie-service
+          uri: lb://movie-service
+          predicates:
+            - Path=/api/v1/movies/**
+          filters:
+            - AuthenticationFilter
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@userEmailOrIpKeyResolver}"
+                redis-rate-limiter.replenishRate: 20
+                redis-rate-limiter.burstCapacity: 40
+            - name: CircuitBreaker
+              args:
+                name: movieServiceCircuitBreaker
+                fallbackuri: forward:/fallback/message
+
+# ===================================================================
+# ACTUATOR CONFIGURATION (For Monitoring)
+# ===================================================================
 management:
   endpoints:
     web:
@@ -42,44 +131,24 @@ management:
         include: "*"
   endpoint:
     gateway:
-      access: unrestricted
+      enabled: true
   info:
     env:
       enabled: true
-  metrics:
-    tags:
-      application: ${spring.application.name}
 
-resilience4j.circuitbreaker:
-  configs:
-    default:
-      slidingWindowSize: 10
-      permittedNumberOfCallsInHalfOpenState: 2
-      failureRateThreshold: 50
-      waitDurationInOpenState: 10000
-
-resilience4j.retry:
-  configs:
-    default:
-      maxAttempts: 3
-      waitDuration: 500
-      enableExponentialBackoff: true
-      exponentialBackoffMultiplier: 2
-      ignoreExceptions:
-        - java.lang.NullPointerException
-      retryExceptions:
-        - java.util.concurrent.TimeoutException
-
-resilience4j.ratelimiter:
-  configs:
-    default:
-      timeoutDuration: 1000
-      limitRefreshPeriod: 5000
-      limitForPeriod: 1
+# ===================================================================
+# LOGGING CONFIGURATION
+# ===================================================================
 logging:
   level:
+    # Set log level to DEBUG for gateway-specific packages for detailed logging.
     vn:
       iotstar:
         apigateway: DEBUG
+    org:
+      springframework:
+        cloud:
+          gateway: INFO
   pattern:
-    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+    # Log pattern including application name and tracing IDs (for Zipkin/Sleuth).
+    level: "%5p [${spring.application.name},%X{traceId},%X{spanId}]"

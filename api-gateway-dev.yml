@@ -40,7 +40,9 @@ spring:
         locator:
           enabled: true
           lowerCaseServiceId: true
-
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 10s
       # Standardized global CORS configuration for the gateway.
       globalcors:
         cors-configurations:
@@ -131,10 +133,13 @@ management:
         include: "*"
   endpoint:
     gateway:
-      enabled: true
+      access: unrestricted
   info:
     env:
       enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 # ===================================================================
 # LOGGING CONFIGURATION
@@ -152,3 +157,15 @@ logging:
   pattern:
     # Log pattern including application name and tracing IDs (for Zipkin/Sleuth).
     level: "%5p [${spring.application.name},%X{traceId},%X{spanId}]"
+
+
+# ===================================================================
+# RESILIENCE4J CONFIGURATION (For Circuit Breaker, Rate Limiter, etc.)
+# ===================================================================
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 2
+      failureRateThreshold: 50
+      waitDurationInOpenState: 10000

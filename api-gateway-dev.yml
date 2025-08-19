@@ -69,9 +69,6 @@ spring:
           uri: lb://auth-service
           predicates:
             - Path=/api/v1/auth/**
-          filters:
-            # Adds a response time header for monitoring.
-            - AddResponseHeader=X-Response-Time, #{T(java.time.LocalDateTime).now().toString()}
 
         # Route for the User Service. Protected by multiple filters.
         - id: user-service

@@ -43,82 +43,9 @@ spring:
       httpclient:
         connect-timeout: 1000
         response-timeout: 10s
-      # Standardized global CORS configuration for the gateway.
-      globalcors:
-        cors-configurations:
-          '[/**]': # Apply to all paths
-            allowed-origins:
-              - "http://localhost:5173"
-              - "http://127.0.0.1:5173"
-            allowed-methods:
-              - "GET"
-              - "POST"
-              - "PUT"
-              - "DELETE"
-              - "PATCH"
-              - "OPTIONS"
-            allowed-headers: "*"
-            allow-credentials: true
-
-      # ===================================================================
-      # ROUTE DEFINITIONS
-      # ===================================================================
-      routes:
-        # Route for the Authentication Service. Publicly accessible.
-        - id: auth-service
-          uri: lb://auth-service
-          predicates:
-            - Path=/api/v1/auth/**
-
-        # Route for the User Service. Protected by multiple filters.
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/api/v1/users/**
-          filters:
-            - AuthenticationFilter
-            # Applies Redis-based rate limiting. Uses the 'userEmailOrIpKeyResolver' bean.
-            - name: RequestRateLimiter
-              args:
-                key-resolver: "#{@userEmailOrIpKeyResolver}"
-                redis-rate-limiter.replenishRate: 10
-                redis-rate-limiter.burstCapacity: 20
-            # Applies a retry mechanism for transient errors.
-            - name: Retry
-              args:
-                # Number of retry attempts.
-                retries: 3
-                # HTTP Statuses that should trigger a retry.
-                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE, GATEWAY_TIMEOUT
-                methods: GET
-                # Configuration for the backoff strategy between retries.
-                backoff:
-                  firstBackoff: 100ms
-                  maxBackoff: 1s
-                  factor: 2
-                  basedOnPreviousValue: true
-            # Applies a Circuit Breaker pattern.
-            - name: CircuitBreaker
-              args:
-                name: userServiceCircuitBreaker
-                fallbackuri: forward:/fallback/message
-
-        # Route for the Movie Service. Protected by multiple filters.
-        - id: movie-service
-          uri: lb://movie-service
-          predicates:
-            - Path=/api/v1/movies/**
-          filters:
-            - AuthenticationFilter
-            - name: RequestRateLimiter
-              args:
-                key-resolver: "#{@userEmailOrIpKeyResolver}"
-                redis-rate-limiter.replenishRate: 20
-                redis-rate-limiter.burstCapacity: 40
-            - name: CircuitBreaker
-              args:
-                name: movieServiceCircuitBreaker
-                fallbackuri: forward:/fallback/message
+      cors:
+        allowed-origins:
+            - "http://localhost:5173" # Allow frontend dev to access
 
 # ===================================================================
 # ACTUATOR CONFIGURATION (For Monitoring)

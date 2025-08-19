@@ -17,7 +17,7 @@ spring:
         jwt:
           issuer-uri: http://localhost:7080/realms/novaplay
   kafka:
-    bootstrap-servers: localhost:9094
+    bootstrap-servers: localhost:9092
   application:
     name: user-service
   datasource:
@@ -27,7 +27,6 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      jdbc.time-zone: Asia/Ho_Chi_Minh
       ddl-auto: update
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -38,24 +37,13 @@ spring:
       circuitbreaker:
         enabled: true
     stream:
-      # Định nghĩa các hàm (bean Consumer/Function/Supplier) sẽ được kích hoạt
-      function:
-        definition: keycloakEventConsumer # Tên của bean Consumer sẽ tạo ở dưới
-
       # Cấu hình các "binding" (kết nối giữa hàm và broker)
       bindings:
-        # Tên binding được tự động tạo theo quy tắc: <tên-hàm>-<in/out>-<index>
-        # Với hàm là 'keycloakEventConsumer', đây là binding cho đầu vào (in)
-        keycloakEventConsumer-in-0:
-          # Đích đến là topic 'keycloak.events' trên Kafka
-          destination: keycloak-events
-          # Consumer group
-          group: user-profile-group
         placeholder-in-0:
           destination: placeholder.ignore
       kafka:
         binder:
-          brokers: ${KAFKA_BROKERS:localhost:9094}
+          brokers: ${KAFKA_BROKERS:localhost:9092}
 
 # Mở các endpoint của Actuator, đặc biệt là bus-refresh
 management:

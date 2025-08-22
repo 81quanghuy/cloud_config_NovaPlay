@@ -1,0 +1,38 @@
+eureka:
+  instance:
+    hostname: email-service
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+
+spring:
+  application:
+    name: email-service
+  data:
+    mongodb:
+      uri: mongodb+srv://admin:admin123@restora.xde1bim.mongodb.net/email-service?retryWrites=true&w=majority
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: broker1:9092,broker2:9092,broker3:9092 # Danh sách các broker
+      bindings:
+        my-output-0:
+          destination: high-throughput-topic
+          producer:
+            configuration:
+              # Yêu cầu tất cả các broker trong in-sync replicas xác nhận
+              # -> Đảm bảo không mất dữ liệu ở mức cao nhất
+              acks: all
+              # Bật chế độ idempotent để tránh gửi trùng lặp message do retry
+              enable.idempotence: true
+              # Tăng kích thước batch để gửi nhiều record trong một request
+              batch.size: 65536 # 64KB
+              # Cho phép producer đợi 20ms để gom đủ batch.size trước khi gửi
+              # Tăng throughput nhưng có thể tăng độ trễ một chút
+              linger.ms: 20
+              # Nén dữ liệu để giảm tải cho network và disk
+              # lz4 hoặc zstd thường có hiệu năng tốt
+              compression.type: lz4
+server:
+  port: 8702

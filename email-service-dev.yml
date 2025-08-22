@@ -12,6 +12,15 @@ spring:
         emailSendRequestConsumer-in-0:
           destination: ops.email.send.request.v1
           group: email-service
+          producer:
+            required-groups: email-service
+            configuration:
+              acks: 1
+              retries: 3
+              batch-size: 16384
+              linger-ms: 10
+              max-block-ms: 60000
+              compression-type: gzip
       kafka:
         binder:
           brokers: ${KAFKA_BROKERS:localhost:9092}
@@ -27,3 +36,8 @@ spring:
               backOffMaxInterval: 30000
 server:
   port: 8702
+# Google reCAPTCHA
+google:
+  recaptcha:
+    secret-key: ${CAPTCHA_SECRET_KEY}
+    site-key: ${CAPTCHA_SITE_KEY}

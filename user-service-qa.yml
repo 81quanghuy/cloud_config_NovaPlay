@@ -17,7 +17,36 @@ spring:
       ddl-auto: update
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
+  cloud:
+    stream:
+      bindings:
+        my-input-0:
+          destination: high-throughput-topic
+          group: high-throughput-group
+          consumer:
+            # Bật chế độ nhận message theo batch thay vì từng cái một
+            # Cải thiện hiệu năng đáng kể
+            batch-mode: true
+            # Tăng số luồng xử lý trên MỘT instance của microservice
+            # Ví dụ, nếu topic có 50 partitions và bạn chạy 5 instances, mỗi instance
+            # sẽ xử lý 10 partitions. concurrency=10 sẽ tạo 10 luồng để xử lý 10 partition đó
+            concurrency: 10
+      kafka:
+        binder:
+          brokers: broker1:9092,broker2:9092,broker3:9092
+        bindings:
+          my-input-0:
+            consumer:
+              configuration:
+                # Tăng số lượng record tối đa consumer lấy về trong một lần poll
+                max.poll.records: 500
+                # Tự động commit offset bị vô hiệu hóa khi dùng batch-mode
+                # Bạn cần xử lý commit offset thủ công hoặc dùng AckMode.BATCH
+                auto-commit-offset: false
+                # Tăng kích thước dữ liệu tối thiểu consumer muốn lấy về
+                fetch.min.bytes: 1048576 # 1MB
+                # Thời gian tối đa consumer chờ để gom đủ fetch.min.bytes
+                fetch.max.wait.ms: 500
 # Tên ứng dụng để đăng ký với Eureka
 eureka:
   instance:

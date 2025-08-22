@@ -11,13 +11,6 @@ eureka:
 server:
   port: 8700
 spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:7080/realms/novaplay
-  kafka:
-    bootstrap-servers: localhost:9092
   application:
     name: user-service
   datasource:
@@ -37,13 +30,20 @@ spring:
       circuitbreaker:
         enabled: true
     stream:
-      # Cấu hình các "binding" (kết nối giữa hàm và broker)
-      bindings:
-        placeholder-in-0:
-          destination: placeholder.ignore
       kafka:
         binder:
           brokers: ${KAFKA_BROKERS:localhost:9092}
+      bindings:
+        placeholder-in-0:
+          destination: placeholder.ignore
+          producer:
+            configuration:
+              acks: 1
+        writeLog-out-0:
+          destination: ops.user.write.log.v1
+          group: user-service
+          consumer:
+            autoCommitOffset: true
 
 # Mở các endpoint của Actuator, đặc biệt là bus-refresh
 management:

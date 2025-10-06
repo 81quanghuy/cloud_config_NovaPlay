@@ -4,6 +4,7 @@ spring:
     port: 587
     username: ${EMAIL_SERVICE_MAIL_USERNAME}
     password: ${EMAIL_SERVICE_MAIL_PASSWORD}
+    test-connection: true
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true

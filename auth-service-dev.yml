@@ -24,7 +24,6 @@ server:
       enable-idempotence: true
       linger-ms: 10
       batch-size: 32768
-      transaction-id-prefix: auth-service-tx-
       properties:
         max.in.flight.requests.per.connection: 5 // batch.size / linger.ms
         compression.type: lz4

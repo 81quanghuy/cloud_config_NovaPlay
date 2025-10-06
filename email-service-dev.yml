@@ -5,11 +5,13 @@ spring:
     username: ${EMAIL_SERVICE_MAIL_USERNAME:ngoquanghuy0310@gmail.com}
     password: ${EMAIL_SERVICE_MAIL_PASSWORD:qmpiiudifabgpyop}
     properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.connectiontimeout: 10000
+      mail.smtp.timeout: 10000
+      mail.smtp.writetimeout: 10000
+      mail.smtp.ssl.trust: smtp.gmail.com
+      mail.debug: false               # true để debug SMTP
   application:
     name: email-service
   data:

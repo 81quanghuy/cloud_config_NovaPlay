@@ -13,6 +13,7 @@ eureka:
 
 server:
   port: 8000
+spring:
   kafka:
     bootstrap-servers: localhost:9092
     producer:

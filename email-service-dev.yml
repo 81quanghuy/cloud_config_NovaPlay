@@ -18,36 +18,23 @@ spring:
       port: 6379
     mongodb:
       uri: mongodb+srv://${MONGO_DB_USERNAME:admin}:${MONGO_DB_PASSWORD:admin123}@restora.xde1bim.mongodb.net/email_service?retryWrites=true&w=majority
-  cloud:
-    function:
-      definition: emailSendRequestConsumer
-    stream:
-      bindings:
-        emailSendRequestConsumer-in-0:
-          destination: ops.email.send.request.v1
-          group: email-service
-          producer:
-            required-groups: email-service
-            configuration:
-              acks: 1
-              retries: 3
-              batch-size: 16384
-              linger-ms: 10
-              max-block-ms: 60000
-              compression-type: gzip
-      kafka:
-        binder:
-          brokers: ${KAFKA_BROKERS:localhost:9092}
-        bindings:
-          emailSendRequestConsumer-in-0:
-            consumer:
-              enableDlq: true
-              dlqName: ops.email.send.request.DLQ.v1
-              ackMode: RECORD
-              maxAttempts: 5
-              backOffInitialInterval: 2000
-              backOffMultiplier: 2.0
-              backOffMaxInterval: 30000
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 10
+      delivery-timeout-ms: 120000
+      enable-idempotence: true
+      linger-ms: 10
+      batch-size: 32768
+      transaction-id-prefix: auth-service-tx-
+      properties:
+        max.in.flight.requests.per.connection: 5 // batch.size / linger.ms
+        compression.type: lz4
+    template:
+      default-topic: user-registered.v1
 server:
   port: 8702
 # Google reCAPTCHA

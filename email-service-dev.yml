@@ -20,21 +20,19 @@ spring:
       uri: mongodb+srv://${MONGO_DB_USERNAME:admin}:${MONGO_DB_PASSWORD:admin123}@restora.xde1bim.mongodb.net/email_service?retryWrites=true&w=majority
   kafka:
     bootstrap-servers: localhost:9092
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      acks: all
-      retries: 10
-      delivery-timeout-ms: 120000
-      enable-idempotence: true
-      linger-ms: 10
-      batch-size: 32768
-      transaction-id-prefix: auth-service-tx-
+    consumer:
+      group-id: email-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        max.in.flight.requests.per.connection: 5 // batch.size / linger.ms
-        compression.type: lz4
-    template:
-      default-topic: user-registered.v1
+        spring.json.trusted.packages: "*"
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      max-poll-records: 50
+    listener:
+      ack-mode: MANUAL             # tự commit sau khi gửi email OK
+      concurrency: 3               # scale ngang theo partitions
+
 server:
   port: 8702
 # Google reCAPTCHA

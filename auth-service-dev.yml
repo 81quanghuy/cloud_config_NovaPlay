@@ -34,6 +34,18 @@ spring:
       properties:
         max.in.flight.requests.per.connection: 5
         compression.type: lz4
+    consumer:
+      group-id: email-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: '*' # Allow all packages to be deserialized
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      max-poll-records: 50
     template:
       default-topic: user-registered.v1
   application:

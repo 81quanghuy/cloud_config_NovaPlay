@@ -46,6 +46,9 @@ spring:
       enable-auto-commit: false
       auto-offset-reset: earliest
       max-poll-records: 50
+    listener:
+      ack-mode: MANUAL             # tự commit sau khi gửi email OK
+      concurrency: 3               # scale ngang theo partitions
   application:
     name: auth-service
     security:

@@ -1,4 +1,8 @@
+server:
+  port: 8702
 spring:
+  application:
+    name: email-service
   mail:
     host: smtp.gmail.com
     port: 587
@@ -12,46 +16,13 @@ spring:
       mail.smtp.timeout: 10000
       mail.smtp.writetimeout: 10000
       mail.smtp.ssl.trust: smtp.gmail.com
-      mail.debug: false               # true để debug SMTP
-  application:
-    name: email-service
   data:
     redis:
       host: localhost
       port: 6379
       password:
       timeout: 5s
-    mongodb:
-      uri: mongodb+srv://${MONGO_DB_USERNAME:admin}:${MONGO_DB_PASSWORD:admin123}@restora.xde1bim.mongodb.net/email_service?retryWrites=true&w=majority
   kafka:
     bootstrap-servers: localhost:9092
-    consumer:
-      group-id: email-service
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring:
-          json:
-            trusted:
-              packages: '*' # Allow all packages to be deserialized
-      enable-auto-commit: false
-      auto-offset-reset: earliest
-      max-poll-records: 50
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      acks: all
-      retries: 10
-      delivery-timeout-ms: 120000
-      enable-idempotence: true
-      linger-ms: 10
-      batch-size: 32768
-      properties:
-        max.in.flight.requests.per.connection: 5
-        compression.type: lz4
-    listener:
-      ack-mode: MANUAL             # tự commit sau khi gửi email OK
-      concurrency: 3               # scale ngang theo partitions
 
-server:
-  port: 8702
+

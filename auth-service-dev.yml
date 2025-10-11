@@ -34,21 +34,6 @@ spring:
       properties:
         max.in.flight.requests.per.connection: 5
         compression.type: lz4
-    consumer:
-      group-id: auth-service
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring:
-          json:
-            trusted:
-              packages: '*' # Allow all packages to be deserialized
-      enable-auto-commit: false
-      auto-offset-reset: earliest
-      max-poll-records: 50
-    listener:
-      ack-mode: MANUAL             # tự commit sau khi gửi email OK
-      concurrency: 3               # scale ngang theo partitions
   application:
     name: auth-service
     security:
@@ -56,24 +41,11 @@ spring:
         expiration: 86400000 # 24 giờ (tính bằng mili giây)
         refresh-token:
           expiration: 604800000 # 7 ngày (tính bằng mili giây)
-
-
   datasource:
     url: jdbc:postgresql://localhost:5432/auth_service
     username: admin
     password: admin123
     driver-class-name: org.postgresql.Driver
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ngoquanghuy0310@gmail.com
-    password: tychlmxomtkudyap
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
   jpa:
     hibernate:
       ddl-auto: update
@@ -81,9 +53,3 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
-# Google reCAPTCHA
-google:
-  recaptcha:
-    secret-key: ${CAPTCHA_SECRET_KEY}
-    site-key: ${CAPTCHA_SITE_KEY}

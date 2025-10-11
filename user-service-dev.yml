@@ -13,7 +13,7 @@ server:
 spring:
   application:
     name: user-service
-  datasource:
+  data:
     mongodb:
       uri: mongodb+srv://${MONGO_DB_USERNAME:admin}:${MONGO_DB_PASSWORD:admin123}@restora.xde1bim.mongodb.net/user_service?retryWrites=true&w=majority
   kafka:

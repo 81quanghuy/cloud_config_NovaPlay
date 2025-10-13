@@ -40,3 +40,6 @@ aws:
 
 aws.accessKeyId: ${YOUR_ACCESS_KEY}
 aws.secretKey: ${YOUR_SECRET_KEY}
+
+kafka-topics:
+  media-ready: "media.ready.topic"

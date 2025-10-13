@@ -103,7 +103,6 @@ logging:
 
 springdoc:
   api-docs:
-    enabled: true     # giữ lại để Gateway đọc
+    path: /v3/api-docs
   swagger-ui:
-    enabled: false    # tắt UI riêng ở service
-
+    path: /swagger-ui.html

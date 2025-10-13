@@ -43,3 +43,12 @@ aws.secretKey: ${YOUR_SECRET_KEY}
 
 kafka-topics:
   media-ready: "media.ready.topic"
+
+job:
+  cleanup:
+    fixed-rate-ms: 3600000
+    pending-older-than-hours: 1
+    fail-older-than-hours: 24
+
+cdn:
+  base-url: https://cdn.novaplay.com

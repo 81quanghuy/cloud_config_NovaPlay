@@ -103,14 +103,7 @@ logging:
 
 springdoc:
   api-docs:
-    path: /v3/api-docs
+    enabled: true     # giữ lại để Gateway đọc
   swagger-ui:
-    path: /swagger-ui
-    operationsSorter: method
-    tagsSorter: alpha
-    displayOperationId: true
-    filter: true
-    # OAuth2 cho nút "Authorize" (dùng PKCE, không cần client secret)
-    oauth:
-      client-id: ${openapi.oauth2.client-id}
-      use-pkce-with-authorization-code-grant: true
+    enabled: false    # tắt UI riêng ở service
+

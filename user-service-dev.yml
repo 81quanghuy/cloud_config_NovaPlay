@@ -91,3 +91,6 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+kafka-topics:
+  media-ready: "media.ready.topic"

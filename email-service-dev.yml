@@ -3,6 +3,10 @@ server:
 spring:
   application:
     name: email-service
+  cloud:
+    stream:
+      default:
+        group: ${spring.application.name}
   mail:
     host: smtp.gmail.com
     port: 587

@@ -21,24 +21,9 @@ spring:
 
   # Cấu hình Spring Cloud Stream
   cloud:
-    openfeign:
-      circuitbreaker:
-        enabled: true
     stream:
-      kafka:
-        binder:
-          brokers: ${KAFKA_BROKERS:localhost:9092}
-      bindings:
-        placeholder-in-0:
-          destination: placeholder.ignore
-          producer:
-            configuration:
-              acks: 1
-        writeLog-out-0:
-          destination: ops.user.write.log.v1
-          group: user-service
-          consumer:
-            autoCommitOffset: true
+      default:
+        group: ${spring.application.name}
 
 # Mở các endpoint của Actuator, đặc biệt là bus-refresh
 management:

@@ -53,7 +53,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
+  cloud:
+    stream:
+      default:
+        group: ${spring.application.name}
 springdoc:
   api-docs:
     path: /v3/api-docs

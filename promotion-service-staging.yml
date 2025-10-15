@@ -11,3 +11,7 @@ server:
 spring:
   application:
     name: promotion-service
+  cloud:
+    stream:
+      default:
+        group: ${spring.application.name}

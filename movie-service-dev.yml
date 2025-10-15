@@ -11,6 +11,9 @@ server:
 spring:
   application:
     name: movie-service
-
+  cloud:
+    stream:
+      default:
+        group: ${spring.application.name}
 app:
   message: "Ngo Diep Quang Huy"

@@ -34,6 +34,9 @@ spring:
   # SPRING CLOUD GATEWAY CONFIGURATION
   # ===================================================================
   cloud:
+    stream:
+      default:
+        group: ${spring.application.name}
     gateway:
       # Enables routing based on service IDs discovered from Eureka.
       discovery:

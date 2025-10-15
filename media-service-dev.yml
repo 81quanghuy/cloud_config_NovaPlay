@@ -21,7 +21,7 @@ spring:
         group: ${spring.application.name}
   data:
     mongodb:
-      uri: mongodb+srv://${MONGO_DB_USERNAME:admin}:${MONGO_DB_PASSWORD:admin123}@restora.xde1bim.mongodb.net/user_service?retryWrites=true&w=majority
+      uri: mongodb+srv://${MONGO_DB_USERNAME:admin}:${MONGO_DB_PASSWORD:admin123}@restora.xde1bim.mongodb.net/media_service?retryWrites=true&w=majority
   kafka:
     bootstrap-servers: localhost:9092
     producer:

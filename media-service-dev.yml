@@ -1,9 +1,13 @@
 eureka:
   instance:
     hostname: media_service
+    preferIpAddress: true
   client:
+    register-with-eureka: true
+    fetch-registry: true
     service-url:
-      defaultZone: http://discovery-server:8761/eureka/
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka}
+
 
 server:
   port: 8800

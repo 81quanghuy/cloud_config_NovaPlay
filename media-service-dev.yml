@@ -14,7 +14,7 @@ server:
 
 spring:
   application:
-    name: media_service
+    name: media-service
   cloud:
     stream:
       default:

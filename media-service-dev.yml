@@ -24,18 +24,6 @@ spring:
       uri: mongodb+srv://${MONGO_DB_USERNAME:admin}:${MONGO_DB_PASSWORD:admin123}@restora.xde1bim.mongodb.net/media_service?retryWrites=true&w=majority
   kafka:
     bootstrap-servers: localhost:9092
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      acks: all
-      retries: 10
-      delivery-timeout-ms: 120000
-      enable-idempotence: true
-      linger-ms: 10
-      batch-size: 32768
-      properties:
-        max.in.flight.requests.per.connection: 5
-        compression.type: lz4
 
 # AWS Config
 aws:

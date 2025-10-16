@@ -59,7 +59,7 @@ job:
     fail-older-than-hours: 24
 
 cdn:
-  base-url: https://cdn.novaplay.com
+  base-url: https://novaplay-media-storage.s3.ap-southeast-1.amazonaws.com
 
 springdoc:
   api-docs:
